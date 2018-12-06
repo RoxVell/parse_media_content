@@ -1,0 +1,23 @@
+{
+  "name": "media_content",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RoxVell/parse_media_content.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RoxVell/parse_media_content/issues"
+  },
+  "homepage": "https://github.com/RoxVell/parse_media_content#readme",
+  "description": "",
+  "devDependencies": {
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
