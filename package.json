@@ -9,15 +9,11 @@
     "type": "git",
     "url": "git+https://github.com/RoxVell/parse_media_content.git"
   },
-  "author": "",
+  "author": "RoxVell",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/RoxVell/parse_media_content/issues"
   },
   "homepage": "https://github.com/RoxVell/parse_media_content#readme",
-  "description": "",
-  "devDependencies": {
-    "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2"
-  }
+  "description": "Extension for parsing media content from web pages such as images, videos, music and so on"
 }
