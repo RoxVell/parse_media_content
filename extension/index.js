@@ -1,33 +1,25 @@
-let mediaGlobal = {}
-
-chrome.browserAction.onClicked.addListener(function(tab) { alert('icon clicked')});
+let mediaGlobal = {};
 
 chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
   chrome.tabs.sendMessage(tabs[0].id, { message: 'parse' });
 });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-
+chrome.runtime.onMessage.addListener(request => {
   if (request.message === 'parse') {
-    console.log('Данные получены');
-    console.log(request.media);
     mediaGlobal = request.media;
     initTabs();
   }
-
 });
 
-
-let currentTab = null
+let currentTab = null;
 let tabContent = document.querySelector('ul.tabs-content');
 
 function createTab(title) {
   let tab = document.createElement('li');
   tab.classList.add('tabs__item');
+  tab.category = title;
   tab.innerText = capitalize(title);
-  tab.onclick = function(event) {
-    changeSurface(event.target);
-  }
+  tab.onclick = (event) => changeSurface(event.target);
   return tab;
 }
 
@@ -44,6 +36,7 @@ const renderRules = {
           <p class="tabs-content__title">${image.title || 'Unknown'}</p>
           <ul class="tabs-content__description">
             ${image.width ? `<li>Размер: ${image.width}x${image.height}</li>` : ""}
+            ${image.type  ? `<li>Формат: ${image.type}</li>` : ""}
           </ul>
         </div>
       </li>
@@ -53,15 +46,33 @@ const renderRules = {
     return `
       <li>
         <a target="_blank" href="${video.src}">
-          <span class="tabs-content__icon" ${video.poster
-            ? `style="background-image: url('${video.poster}')"`
-            : ""
-          }></span>
+          <span
+            class="tabs-content__icon"
+            style="background-image: url('${video.poster ? video.poster : "./assets/033-video.png"}')"
+          ></span>
         </a>
         <div>
           <p class="tabs-content__title">${video.type || "Unknown"}</p>
           <ul class="tabs-content__description">
             ${video.duration ? `<li>Длительность: ${video.duration}</li>` : ""}
+          </ul>
+        </div>
+      </li>
+    `
+  },
+  'music': (music) => {
+    return `
+      <li>
+        <a target="_blank" href="${music.src}">
+          <span
+            class="tabs-content__icon"
+            style="background-image: url('./assets/022-music.png')"
+          ></span>
+        </a>
+        <div>
+          <p class="tabs-content__title">${music.type || "Unknown"}</p>
+          <ul class="tabs-content__description">
+            
           </ul>
         </div>
       </li>
@@ -85,7 +96,7 @@ const renderRules = {
 }
 
 function renderCategory(category, parent) {
-  let innerHTML = ''
+  let innerHTML = '';
   let renderFunction = renderRules[category] || renderRules[otherRenderFunction];
 
   for (let item of mediaGlobal[category]) {
@@ -96,10 +107,8 @@ function renderCategory(category, parent) {
 }
 
 function changeSurface(tab) {
-  let category = tab.innerText.toLowerCase();
-
+  let category = tab.category;
   renderCategory(category, tabContent);
-
   selectTab(tab);
 }
 
@@ -114,9 +123,7 @@ const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 function initTabs() {
   chrome.storage.sync.get('parseFormats', function(data) {
     let formats = Object.keys(data.parseFormats);
-  
     let tabs = formats.map(createTab);
-  
     let tabContainer = document.querySelector('ul.tabs-header');
   
     for (let tab of tabs) {
