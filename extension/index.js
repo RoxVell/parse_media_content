@@ -14,16 +14,17 @@ chrome.runtime.onMessage.addListener(request => {
 let currentTab = null;
 let tabContent = document.querySelector('ul.tabs-content');
 
-function createTab(title) {
+function createTab(category, title) {
   let tab = document.createElement('li');
   tab.classList.add('tabs__item');
-  tab.category = title;
+  tab.category = category;
   tab.innerText = capitalize(title);
   tab.onclick = (event) => changeSurface(event.target);
   return tab;
 }
 
 const otherRenderFunction = Symbol();
+const getMessage = chrome.i18n.getMessage;
 
 const renderRules = {
   'images': (image) => {
@@ -35,8 +36,8 @@ const renderRules = {
         <div>
           <p class="tabs-content__title">${image.title || 'Unknown'}</p>
           <ul class="tabs-content__description">
-            ${image.width ? `<li>Размер: ${image.width}x${image.height}</li>` : ""}
-            ${image.type  ? `<li>Формат: ${image.type}</li>` : ""}
+            ${image.width ? `<li>${getMessage('size')}: ${image.width}x${image.height}</li>` : ""}
+            ${image.type  ? `<li>${getMessage('format')}: ${image.type}</li>` : ""}
           </ul>
         </div>
       </li>
@@ -48,13 +49,13 @@ const renderRules = {
         <a target="_blank" href="${video.src}">
           <span
             class="tabs-content__icon"
-            style="background-image: url('${video.poster ? video.poster : "./assets/033-video.png"}')"
+            style="background-image: url('${video.poster ? video.poster : "./assets/video.png"}')"
           ></span>
         </a>
         <div>
           <p class="tabs-content__title">${video.type || "Unknown"}</p>
           <ul class="tabs-content__description">
-            ${video.duration ? `<li>Длительность: ${video.duration}</li>` : ""}
+            ${video.duration ? `<li>${getMessage('duration')}: ${video.duration}</li>` : ""}
           </ul>
         </div>
       </li>
@@ -66,7 +67,7 @@ const renderRules = {
         <a target="_blank" href="${music.src}">
           <span
             class="tabs-content__icon"
-            style="background-image: url('./assets/022-music.png')"
+            style="background-image: url('./assets/music.png')"
           ></span>
         </a>
         <div>
@@ -122,15 +123,15 @@ const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 function initTabs() {
   chrome.storage.sync.get('parseFormats', function(data) {
-    let formats = Object.keys(data.parseFormats);
-    let tabs = formats.map(createTab);
-    let tabContainer = document.querySelector('ul.tabs-header');
-  
-    for (let tab of tabs) {
-      tabContainer.appendChild(tab);
-    }
-  
-    console.log(tabs[0]);
+    const tabContainer = document.querySelector('ul.tabs-header');
+    const tabs = [];
+
+    Object.entries(data.parseFormats)
+      .forEach(([category, data]) => {
+        let tab = createTab(category, data.title);
+        tabs.push(tab);
+        tabContainer.appendChild(tab);
+      })
   
     currentTab = tabs[0];
     changeSurface(tabs[0]);

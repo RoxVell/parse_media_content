@@ -1,0 +1,34 @@
+{
+  "application_title": {
+    "message": "Media Parser",
+    "description": "The title of the application, displayed in the web store."
+  },
+  "application_description": {
+    "message": "An extension that allows you to parse media content such as pictures, videos, music and so on.",
+    "description": "The description of the application, displayed in the web store."
+  },
+  "images": {
+    "message": "Images"
+  },
+  "videos": {
+    "message": "Videos"
+  },
+  "music": {
+    "message": "Music"
+  },
+  "text": {
+    "message": "Text"
+  },
+  "other": {
+    "message": "Other"
+  },
+  "size": {
+    "message": "Size"
+  },
+  "format": {
+    "message": "Format"
+  },
+  "duration": {
+    "message": "Duration"
+  }
+}

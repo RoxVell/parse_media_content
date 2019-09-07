@@ -41,7 +41,7 @@ function getVideosFromElements() {
       type: video.attributes.type ? video.attributes.type.value : null
     };
 
-    if (instance instanceof HTMLVideoElement) {
+    if (video instanceof HTMLVideoElement) {
       instance["duration"] = getDuration(video.duration);
       instance["poster"] = video.poster;
     }
@@ -77,29 +77,25 @@ let parseMediaContent = async () => {
     videos: getVideosFromElements()
   };
 
-  console.log(media)
-
   const data = await getFromStorage("parseFormats");
   const formats = data.parseFormats;
 
   for (let category in formats) {
     if (!media[category]) media[category] = new Map();
 
-    let categoryRegexp = getRegExpByFormats(formats[category]);
+    let categoryRegexp = getRegExpByFormats(formats[category].content);
     let results = [...body.matchAll(categoryRegexp)];
-
-    results.forEach((item) => console.log(item));
 
     for (let item of results) {
       let link = decodeEntities(Array.isArray(item) ? item[0] : item);
-      if (!item.groups.host) link = link.slice(2);
+      if (!item.groups.host) link = 'http:' + link;
 
-      if (!media[category].has(link)) {
-        media[category].set(item.src, {
-          src: item.src,
-          type: item.groups.format
-        });
-      }
+      if (media[category].has(link)) continue;
+
+      media[category].set(link, {
+        src: link,
+        type: item.groups.format
+      });
     }
 
     media[category].delete("");

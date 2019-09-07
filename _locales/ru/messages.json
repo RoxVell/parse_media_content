@@ -1,0 +1,34 @@
+{
+  "application_title": {
+    "message": "Media Parser",
+    "description": "Название приложения, отображаемое в интернет-магазине."
+  },
+  "application_description": {
+    "message": "Расширение, которое позволяет парсить медиа контент, такой как картинки, видео, музыку и так далее.",
+    "description": "Описание приложения, отображаемое в интернет-магазине."
+  },
+  "images": {
+    "message": "Картинки"
+  },
+  "videos": {
+    "message": "Видео"
+  },
+  "music": {
+    "message": "Музыка"
+  },
+  "text": {
+    "message": "Текст"
+  },
+  "other": {
+    "message": "Другое"
+  },
+  "size": {
+    "message": "Размер"
+  },
+  "format": {
+    "message": "Формат"
+  },
+  "duration": {
+    "message": "Длительность"
+  }
+}

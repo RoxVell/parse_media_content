@@ -1,10 +1,14 @@
 chrome.runtime.onInstalled.addListener(function() {
   const parseFormats = {
-    images: ['jpg', 'jpeg', 'png', 'svg'],
-    videos: ['mp4'],
-    music: ['mp3', 'wav'],
-    text: ['json', 'pdf', 'csv']
+    images: {content: ['jpg', 'jpeg', 'png', 'svg']},
+    videos: {content: ['mp4']},
+    music:  {content: ['mp3', 'wav']},
+    text:   {content: ['json', 'pdf', 'csv']}
   };
+
+  for (let key in parseFormats) {
+    parseFormats[key].title = chrome.i18n.getMessage(key)
+  }
 
   chrome.storage.sync.set({ parseFormats });
 });
